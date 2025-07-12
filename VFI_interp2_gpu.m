@@ -1,8 +1,8 @@
-function [V,Policy]=VFI_interp2(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions)
+function [V,Policy]=VFI_interp2_gpu(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, vfoptions)
 
-a_grid = gather(a_grid);
-z_grid = gather(z_grid);
-pi_z   = gather(pi_z);
+a_grid = gpuArray(a_grid);
+z_grid = gpuArray(z_grid);
+pi_z   = gpuArray(pi_z);
 
 
 %% Create return function matrix
@@ -13,11 +13,11 @@ ReturnMatrix = Aiyagari1994_ReturnFn_cpu(aprime_gridvals,a_gridvals,z_gridvals,P
 
 N_a=prod(n_a);
 N_z=prod(n_z);
-NA = colon(1,N_a)';
+NA = gpuArray.colon(1,N_a)';
 pi_z_transpose = pi_z';
 
-VKronold = zeros(N_a,N_z);
-Policy = zeros(N_a,N_z);
+VKronold = zeros(N_a,N_z,'gpuArray');
+Policy = zeros(N_a,N_z,'gpuArray');
 
 Tolerance = vfoptions.tolerance;
 maxiter = vfoptions.maxiter;

@@ -1,6 +1,6 @@
 %% Aiyagari (1994) with interpolation, only VFI
 clear,clc,close all
-addpath(genpath('C:\Users\aledi\OneDrive\Documents\GitHub\VFIToolkit-matlab'))
+addpath(genpath('C:\Users\aledi\Documents\GitHub\VFIToolkit-matlab'))
 % These codes set up and solve the Aiyagari (1994) model for a given
 % parametrization. After solving the model they then show how some of the
 % vfitoolkit commands to easily calculate things like the Gini coefficient
@@ -17,8 +17,8 @@ addpath(genpath('C:\Users\aledi\OneDrive\Documents\GitHub\VFIToolkit-matlab'))
 % z: an exogenous state variable (exogenous labor supply)
 
 % Size of the grids
-n_k=1500;%2^9;
-n_z=99; %21;
+n_k=1000;%2^9;
+n_z=21;
 
 % Parameters
 Params.beta=0.96; %Model period is one-sixth of a year
@@ -84,9 +84,7 @@ Params.w=(1-Params.alpha)*((Params.r+Params.delta)/Params.alpha)^(Params.alpha/(
 vfoptions.verbose=0; % Use default options for solving the value function (and policy fn)
 vfoptions.tolerance=1e-5;
 vfoptions.maxiter=1000;
-vfoptions.Howards2=80;
-
-
+vfoptions.Howards2=40;
 
 fprintf('Calculating various equilibrium objects \n')
 tic
@@ -96,7 +94,7 @@ toc
 vfoptions.do_interp=1;
 vfoptions.n_fine = 30;
 tic
-[V_interp,Policy_interp]=VFI_interp(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames,vfoptions);
+[V_interp,Policy_interp]=VFI_interp2(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames,vfoptions);
 toc
 
 pol_c = zeros(n_a,n_z);
