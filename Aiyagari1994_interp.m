@@ -87,10 +87,10 @@ vfoptions.tolerance=1e-5;
 vfoptions.maxiter=1000;
 vfoptions.Howards2=40;
 
-fprintf('Calculating various equilibrium objects \n')
-tic
-[V,Policy]=ValueFnIter_Case1(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, [], vfoptions);
-toc
+% fprintf('Calculating various equilibrium objects \n')
+% tic
+% [V,Policy]=ValueFnIter_Case1(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames, [], vfoptions);
+% toc
 
 vfoptions.do_interp=1;
 vfoptions.n_fine = 30;
