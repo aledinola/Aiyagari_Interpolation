@@ -13,7 +13,13 @@ ReturnMatrix = Aiyagari1994_ReturnFn_cpu(aprime_gridvals,a_gridvals,z_gridvals,P
 
 N_a=prod(n_a);
 N_z=prod(n_z);
-NA = colon(1,N_a)';
+%NA = colon(1,N_a)';
+%NAZ = colon(1,N_a*N_z)';
+
+[a_ind,z_ind] = ndgrid((1:N_a)',(1:N_z)');
+a_ind = a_ind(:);
+z_ind = z_ind(:);
+
 pi_z_transpose = pi_z';
 
 VKronold = zeros(N_a,N_z);
@@ -67,23 +73,15 @@ while currdist>Tolerance && tempcounter<=maxiter
     % Find interp indexes and weights
     [aprime_opt,weight_opt] = find_loc_vec2(a_grid,Policy);
 
-    % Build big transition matrix from (a,z) to (a',z')
-    G = cell(N_z,1);
-    for z_c = 1:N_z
-        G{z_c} = sparse(NA,aprime_opt(:,z_c),weight_opt(:,z_c),N_a,N_a)+...
-        sparse(NA,aprime_opt(:,z_c)+1,1-weight_opt(:,z_c),N_a,N_a);
-    end
-    % Q = cell(N_z,1);
-    % for z_c = 1:N_z
-    %     % Kron product of (1,nz) with (na,na) gives (na,nz*na) matrix
-    %     Q{z_c} = kron(pi_z(z_c,:),G{z_c}); %dim: (na,na*nz)
-    % end %close z
-    Qmat = blkdiag(G{:});
-    
-    %Ibig = speye(N_a*N_z,N_a*N_z);
-    %V_howard = (Ibig-DiscountFactorParamsVec*Qmat)\Ftemp_vec;
-    %VKron = bicgstab((Ibig-DiscountFactorParamsVec*Qmat),Ftemp_vec,1e-6,100);
-    %VKron = reshape(VKron,[N_a*N_z,1]);
+    aprime_opt_vec = aprime_opt(:);
+    weight_opt_vec = weight_opt(:);
+
+    ind = a_ind+(z_ind-1)*N_a;
+    indp = aprime_opt_vec+(z_ind-1)*N_a;
+    indpp = aprime_opt_vec+1+(z_ind-1)*N_a;
+    Qmat = sparse(ind,indp,weight_opt_vec,N_a*N_z,N_a*N_z)+...
+         sparse(ind,indpp,1-weight_opt(:),N_a*N_z,N_a*N_z);
+
     for h_c=1:Howards2
         EV_howard = VKron*pi_z_transpose; % (a',z)
         EV_howard = reshape(EV_howard,[N_a*N_z,1]);

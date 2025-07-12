@@ -1,6 +1,7 @@
 %% Aiyagari (1994) with interpolation, only VFI
 clear,clc,close all
-addpath(genpath('C:\Users\aledi\Documents\GitHub\VFIToolkit-matlab'))
+%addpath(genpath('C:\Users\aledi\Documents\GitHub\VFIToolkit-matlab'))
+addpath(genpath('C:\Users\aledi\OneDrive\Documents\GitHub\VFIToolkit-matlab'))
 % These codes set up and solve the Aiyagari (1994) model for a given
 % parametrization. After solving the model they then show how some of the
 % vfitoolkit commands to easily calculate things like the Gini coefficient
@@ -94,7 +95,7 @@ toc
 vfoptions.do_interp=1;
 vfoptions.n_fine = 30;
 tic
-[V_interp,Policy_interp]=VFI_interp2(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames,vfoptions);
+[V_interp,Policy_interp]=VFI_interp2_gpu(n_d,n_a,n_z,d_grid,a_grid,z_grid, pi_z, ReturnFn, Params, DiscountFactorParamNames,vfoptions);
 toc
 
 pol_c = zeros(n_a,n_z);
